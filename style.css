@@ -1,0 +1,131 @@
+:root {
+  --col4: #fa748f;   /* rosa escuro */
+  --col5: #f58696;   /* rosa claro */
+  --col7: #1a1623;   /* tom escuro para texto */
+}
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  font-family: 'Garet', sans-serif;
+}
+
+/* FUNDO DEGRADÊ DE ROSAS CONTÍNUO (removido o amarelo) */
+body {
+  background: linear-gradient(
+    45deg,
+    var(--col4) 0%,
+    var(--col5) 100%
+  );
+  background-size: 200% 200%;
+  animation: gradientBG 12s ease infinite;
+  color: #333;
+}
+@keyframes gradientBG {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ESTRELINHAS */
+.star-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: twinkle 2s ease-in-out infinite, floatUp var(--star-speed) linear infinite;
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0; }
+  50%     { opacity: 1; }
+}
+@keyframes floatUp {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-110vh); }
+}
+
+/* BOTÃO DE CONTATO CENTRALIZADO */
+.contact-btn {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(250,116,143,0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+.contact-btn:hover {
+  background: rgba(245,134,150,0.6);
+}
+
+/* OVERLAY E POPUP */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 80px;
+  z-index: 2000;
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal {
+  background: rgba(255,255,255,0.8);
+  border-radius: 8px;
+  padding: 24px 32px;
+  max-width: 320px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+.modal h3 {
+  font-family: 'Barbara', serif;
+  color: var(--col7);
+  margin-bottom: 16px;
+}
+.modal a {
+  display: inline-block;
+  margin: 12px 0;
+  padding: 10px 16px;
+  background: var(--col4);
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.modal a:hover {
+  background: var(--col5);
+}
+.close-btn {
+  position: absolute;
+  top: 8px; right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* AS DEMAIS REGRAS (container, seções, grid, cards...) vão sob demanda */

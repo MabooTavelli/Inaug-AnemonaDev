@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Maddu – Dev & Designer Gráfica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      /* Degradê pastel de fundo */
+      --p1: #f7c6d3;
+      --p2: #d9a0c3;
+      --p3: #80b2c9;
+      --p4: #78ba8a;
+      --p5: #e8d37f;
+      /* Degradê escuro para links de contato */
+      --d1: #8b4762;
+      --d2: #6c397f;
+      --d3: #436480;
+      --d4: #3e7b57;
+      --d5: #aa993f;
+      --txt-dark: #1a1623;
+    }
+
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: 'Garet', sans-serif; }
+
+    /* Fundo animado */
+    body {
+      background: linear-gradient(45deg, var(--p1), var(--p2), var(--p3), var(--p4), var(--p5));
+      background-size: 400% 400%;
+      animation: gradientBG 20s ease infinite;
+      color: #333;
+    }
+    @keyframes gradientBG {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Estrelinhas subindo */
+    .star-container {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden; pointer-events: none;
+      z-index: 1;
+    }
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      animation: floatUp var(--star-speed) linear infinite;
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-110vh); }
+    }
+
+    /* Botão Entre em contato */
+    .contact-btn {
+      position: fixed; top: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(250,116,143,0.3);
+      color: #fff; border: none;
+      border-radius: 50px; padding: 12px 20px;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000; transition: background 0.2s;
+    }
+    .contact-btn:hover {
+      background: rgba(250,116,143,0.5);
+    }
+
+    /* Popup */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none; align-items: flex-start;
+      justify-content: center; padding-top: 80px;
+      z-index: 2000;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: rgba(255,255,255,0.8);
+      border-radius: 8px; padding: 24px 32px;
+      width: 90%; max-width: 320px;
+      text-align: center; position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .modal h3 {
+      font-family: 'Barbara', serif;
+      color: var(--txt-dark); margin-bottom: 16px;
+    }
+    .modal a {
+      display: inline-block; margin: 12px 0;
+      padding: 10px 16px;
+      background: var(--p2); color: #fff;
+      border-radius: 6px; text-decoration: none;
+      font-weight: 600; transition: background 0.2s;
+    }
+    .modal a:hover {
+      background: var(--p3);
+    }
+    .close-btn {
+      position: absolute; top: 8px; right: 12px;
+      background: transparent; border: none;
+      font-size: 1.4rem; cursor: pointer; color: #333;
+    }
+
+    /* Links de contato – degradê escuro */
+    .contact-link {
+      background: linear-gradient(45deg, var(--d1), var(--d2), var(--d3), var(--d4), var(--d5));
+      background-clip: text; -webkit-background-clip: text;
+      color: transparent; background-size: 400% 400%;
+      animation: linkBG 8s ease infinite;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    @keyframes linkBG {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .contact-link:hover { opacity: 0.8; }
+
+    /* Container e tipografia */
+    .container {
+      position: relative; z-index: 2;
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 20px 60px;
+    }
+    h2.section-title {
+      font-family: 'Barbara', serif;
+      font-size: 2.4rem; text-align: center;
+      margin-bottom: 32px; color: var(--txt-dark);
+    }
+    p, li { font-size: 1rem; line-height: 1.6; color: #333; }
+
+    /* Glassmorphism nas seções */
+    section {
+      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 12px; padding: 40px;
+      margin-bottom: 40px;
+    }
+    section#styles, section#gallery {
+      background: transparent; border: none;
+      backdrop-filter: none; padding: 0;
+      margin-bottom: 60px;
+    }
+
+    /* Grid e cards */
+    .row {
+      display: grid; gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      margin-bottom: 40px;
+    }
+    .card {
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px; padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .card h3 {
+      font-family: 'Barbara', serif;
+      color: var(--txt-dark); margin-bottom: 8px;
+    }
+    .card small {
+      display: block; font-size: 0.9rem;
+      color: #555; margin-bottom: 12px;
+    }
+
+    /* Habilidades em programação – badges */
+    .prog-skills-list {
+      display: grid; gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+      list-style: none; padding: 0;
+      margin: 0 auto 40px; max-width: 800px;
+    }
+    .prog-skills-list li {
+      background: rgba(255,255,255,0.25);
+      color: var(--txt-dark); padding: 10px;
+      border-radius: 6px; text-align: center;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .prog-skills-list li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Carrossel de design */
+    .skills-carousel {
+      position: relative; overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .skills-track {
+      display: flex; transition: transform 0.4s ease;
+    }
+    .skill-card {
+      flex: 0 0 220px; height: 140px;
+      margin-right: 20px; border-radius: 8px;
+      background-size: cover; background-position: center;
+      color: #fff; display: flex; align-items: flex-end;
+      padding: 12px; font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .arrow {
+      position: absolute; top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.4);
+      border: none; font-size: 1.4rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      cursor: pointer; color: var(--txt-dark);
+      z-index: 10; transition: background 0.2s;
+    }
+    .arrow:hover { background: rgba(255,255,255,0.6); }
+    .arrow-left { left: 16px; }
+    .arrow-right { right: 16px; }
+
+    /* Paleta de cores */
+    .palette {
+      display: flex; justify-content: center;
+      gap: 12px; flex-wrap: wrap; padding: 20px;
+    }
+    .swatch {
+      width: 48px; height: 48px; border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    /* Galeria de projetos */
+    .gallery-grid {
+      display: grid; gap: 24px;
+      grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+      padding: 20px;
+    }
+    .gallery-card {
+      background: rgba(255,255,255,0.2);
+      padding: 24px; border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .gallery-card a {
+      color: var(--txt-dark); word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Estrelas -->
+  <div class="star-container" id="starContainer"></div>
+
+  <!-- Botão -->
+  <button class="contact-btn">Entre em contato</button>
+
+  <!-- Popup -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <h3>Entre em contato</h3>
+      <a href="https://wa.me/qr/AUEVCQGLKGXCD1" target="_blank">WhatsApp</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Sobre -->
+    <section id="about">
+      <h2 class="section-title">Sobre Mim</h2>
+      <div class="row">
+        <div class="card">
+          <p>Sou a Maddu, dev e designer gráfica. Atualmente estudo Análise e Desenvolvimento de Sistemas no Senac-SP. Busco estágios para evoluir de forma positiva e dinâmica.</p>
+          <p><strong>Disponibilidade:</strong> 6h ou 8h por dia (Presencial, Híbrido ou Remoto)</p>
+        </div>
+        <div class="card">
+          <p><strong>Localização:</strong> Grajaú, São Paulo, Brasil</p>
+          <p><strong>Email:</strong> <a class="contact-link" href="mailto:mabootavelli@gmail.com">mabootavelli@gmail.com</a></p>
+          <p><strong>Telefone:</strong> <a class="contact-link" href="tel:+5511981873606">(11) 98187-3606</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experiência -->
+    <section id="experience">
+      <h2 class="section-title">Experiência Profissional</h2>
+      <div class="row">
+        <div class="card">
+          <h3>Consultora Tecnológica<br><small>It Powe/B2X Care – 2025</small></h3>
+          <p>Análise e diagnóstico de erros de software para Samsung e propostas de correção.</p>
+        </div>
+        <div class="card">
+          <h3>Consultora Galaxy<br><small>Samsung Brasil – 2025</small></h3>
+          <p>Atendimento e suporte de software para a linha Galaxy.</p>
+        </div>
+        <div class="card">
+          <h3>Designer Gráfico<br><small>Meta Smart Group – 2024</small></h3>
+          <p>Identidades visuais, ilustrações e gestão de projetos criativos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formação -->
+    <section id="education">
+      <h2 class="section-title">Formação Acadêmica</h2>
+      <div class="row">
+        <div class="card">
+          <h3>Análise e Desenvolvimento de Sistemas<br><small>Senac-SP, 2025–2027</small></h3>
+        </div>
+        <div class="card">
+          <h3>Designer Gráfico<br><small>Unifatecie-SP, 2025–2027</small></h3>
+        </div>
+        <div class="card">
+          <h3>Fundamentos em Python<br><small>Cisco Ntw, 2025</small></h3>
+        </div>
+        <div class="card">
+          <h3>Designer Gráfico<br><small>Escola SAGA, 2018</small></h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Habilidades em Programação -->
+    <section id="prog-skills">
+      <h2 class="section-title">Habilidades em Programação</h2>
+      <ul class="prog-skills-list">
+        <li>C#</li>
+        <li>C</li>
+        <li>HTML5</li>
+        <li>CSS</li>
+        <li>Node.js</li>
+        <li>Python</li>
+        <li>Java</li>
+        <li>JavaScript</li>
+        <li>MySQL</li>
+        <li>Git / GitHub</li>
+        <li>VS Code</li>
+        <li>Azure</li>
+        <li>Scrum</li>
+        <li>React</li>
+      </ul>
+    </section>
+
+    <!-- Habilidades em Design -->
+    <section id="design-skills">
+      <h2 class="section-title">Habilidades em Design</h2>
+      <div class="skills-carousel">
+        <button class="arrow arrow-left">&larr;</button>
+        <div class="skills-track">
+          <div class="skill-card" style="background-image:url('https://i.ibb.co/whk8VNW4/apps-37986-9007199266243449-6a5fb325-8ac1-4fc1-99bf-2213582c1b13.png');">Adobe Photoshop</div>
+          <div class="skill-card" style="background-image:url('https://i.ibb.co/TDSS6Bmk/adobe-illustrator-icon-filled-256.webp');">Adobe Illustrator</div>
+          <div class="skill-card" style="background-image:url('https://i.ibb.co/b9stG4m/d786ec5c04bffd797b73ef8cf641e97917db721428035dfe69234ef0f49ffa0e-200.webp');">Clip Studio</div>
+          <div class="skill-card" style="background-image:url('https://i.ibb.co/fYgmQg6t/85f69649-5387-44c2-ba45-81ae13812e36-cover.png');">Figma</div>
+          <div class="skill-card" style="background-image:url('https://i.ibb.co/CKPHNZKd/images.png');">Adobe XD</div>
+        </div>
+        <button class="arrow arrow-right">&rarr;</button>
+      </div>
+    </section>
+
+    <!-- Paleta de Cores -->
+    <section id="styles">
+      <h2 class="section-title">Paleta de Cores</h2>
+      <div class="palette">
+        <div class="swatch" style="background:var(--p1)" title="#f7c6d3"></div>
+        <div class="swatch" style="background:var(--p2)" title="#d9a0c3"></div>
+        <div class="swatch" style="background:var(--p3)" title="#80b2c9"></div>
+        <div class="swatch" style="background:var(--p4)" title="#78ba8a"></div>
+        <div class="swatch" style="background:var(--p5)" title="#e8d37f"></div>
+      </div>
+    </section>
+
+    <!-- Galeria de Projetos -->
+    <section id="gallery">
+      <h2 class="section-title">Galeria de Projetos</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card">
+          <h3>GitHub</h3>
+          <p><a href="https://github.com/MabooTavelli" target="_blank">github.com/MabooTavelli</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Popup
+    const btn    = document.querySelector('.contact-btn');
+    const modal  = document.getElementById('contactModal');
+    const close  = document.getElementById('closeModal');
+    btn.addEventListener('click', () => modal.classList.add('active'));
+    close.addEventListener('click', () => modal.classList.remove('active'));
+    window.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
+
+    // Gera estrelinhas
+    const container = document.getElementById('starContainer');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('span');
+      star.className = 'star';
+      const x = Math.random() * 100;
+      const y = 100 + Math.random() * 10;
+      const size = 1 + Math.random() * 3;
+      const speed = 5 + Math.random() * 10;
+      star.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${x}vw; top:${y}vh;
+        --star-speed:${speed}s;
+      `;
+      container.appendChild(star);
+    }
+  </script>
+</body>
+</html>
